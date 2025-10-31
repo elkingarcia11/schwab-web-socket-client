@@ -55,7 +55,7 @@ Run the client with default settings:
 
 ```bash
 source .venv/bin/activate  # If not already activated
-python schwab_web_socket_client.py
+python schwab_websocket_client.py
 ```
 
 ### Command-Line Options
@@ -63,7 +63,7 @@ python schwab_web_socket_client.py
 All file paths and output directory are configurable via command-line arguments:
 
 ```bash
-python schwab_web_socket_client.py [OPTIONS]
+python schwab_websocket_client.py [OPTIONS]
 ```
 
 **Available Options:**
@@ -78,19 +78,19 @@ python schwab_web_socket_client.py [OPTIONS]
 
 ```bash
 # Use custom symbol files
-python schwab_web_socket_client.py --symbols my_stocks.txt --options my_options.txt
+python schwab_websocket_client.py --symbols my_stocks.txt --options my_options.txt
 
 # Use custom data output directory
-python schwab_web_socket_client.py --data-dir /path/to/output
+python schwab_websocket_client.py --data-dir /path/to/output
 
 # Enable debug mode with custom paths
-python schwab_web_socket_client.py --debug --symbols stocks.txt --data-dir market_data
+python schwab_websocket_client.py --debug --symbols stocks.txt --data-dir market_data
 
 # Use all options together
-python schwab_web_socket_client.py --symbols equities.txt --options contracts.txt --token my_token.txt --data-dir ./output --debug
+python schwab_websocket_client.py --symbols equities.txt --options contracts.txt --token my_token.txt --data-dir ./output --debug
 
 # Test with copy files (if you have symbols_copy.txt, options_symbols_copy.txt, etc.)
-python schwab_web_socket_client.py --symbols symbols_copy.txt --options options_symbols_copy.txt --token schwab_access_token_copy.txt --data-dir test_output
+python schwab_websocket_client.py --symbols symbols_copy.txt --options options_symbols_copy.txt --token schwab_access_token_copy.txt --data-dir test_output
 ```
 
 ### What Happens

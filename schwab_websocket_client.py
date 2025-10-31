@@ -80,9 +80,9 @@ class SchwabWebSocketClient:
 
         # Store streamer info
         self.streamer_info = self.user_preferences['streamerInfo'][0]
-        self.schwab_web_socket_client_customer_id = self.streamer_info.get(
+        self.schwab_websocket_client_customer_id = self.streamer_info.get(
             'schwabClientCustomerId')
-        if not self.schwab_web_socket_client_customer_id:
+        if not self.schwab_websocket_client_customer_id:
             raise Exception("No SchwabClientCustomerId in streamer info")
 
     def load_symbols_from_file(self, filepath: str) -> List[str]:
@@ -657,7 +657,7 @@ class SchwabWebSocketClient:
                     "service": "ADMIN",
                     "command": "LOGIN",
                     "requestid": str(self.request_id),
-                    "SchwabClientCustomerId": self.schwab_web_socket_client_customer_id,
+                    "SchwabClientCustomerId": self.schwab_websocket_client_customer_id,
                     "SchwabClientCorrelId": self.streamer_info.get("schwabClientCorrelId", ""),
                     "parameters": {
                         "Authorization": access_token,
@@ -694,7 +694,7 @@ class SchwabWebSocketClient:
                 "service": "CHART_EQUITY",
                 "command": "SUBS",
                 "requestid": self.request_id,
-                "SchwabClientCustomerId": self.schwab_web_socket_client_customer_id,
+                "SchwabClientCustomerId": self.schwab_websocket_client_customer_id,
                 "SchwabClientCorrelId": f"chart_{int(time.time() * 1000)}",
                 "parameters": {
                     "keys": ",".join(symbols),
@@ -741,7 +741,7 @@ class SchwabWebSocketClient:
                 "service": "LEVELONE_OPTIONS",
                 "command": "SUBS",
                 "requestid": self.request_id,
-                "SchwabClientCustomerId": self.schwab_web_socket_client_customer_id,
+                "SchwabClientCustomerId": self.schwab_websocket_client_customer_id,
                 "SchwabClientCorrelId": f"option_{int(time.time() * 1000)}",
                 "parameters": {
                     "keys": ",".join(symbols),
@@ -924,9 +924,9 @@ if __name__ == "__main__":
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog='''
 Examples:
-  python schwab_web_socket_client.py
-  python schwab_web_socket_client.py --symbols my_symbols.txt --options my_options.txt
-  python schwab_web_socket_client.py --data-dir /path/to/data --debug
+  python schwab_websocket_client.py
+  python schwab_websocket_client.py --symbols my_symbols.txt --options my_options.txt
+  python schwab_websocket_client.py --data-dir /path/to/data --debug
         '''
     )
     parser.add_argument('--symbols', '-s', type=str, default='symbols.txt',
