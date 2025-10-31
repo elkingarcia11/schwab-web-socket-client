@@ -11,6 +11,7 @@ import json
 import time
 import threading
 import os
+import argparse
 
 import httpx
 import websocket
@@ -22,9 +23,11 @@ class SchwabWebSocketClient:
     
     def __init__(self, debug: bool = False, symbols_filepath: str = 'symbols.txt', 
                  option_symbols_filepath: str = 'options_symbols.txt',
-                 access_token_filepath: str = 'schwab_access_token.txt'):
+                 access_token_filepath: str = 'schwab_access_token.txt',
+                 data_output_dir: str = 'data'):
         self.debug = debug
         self.access_token_filepath = access_token_filepath
+        self.data_output_dir = data_output_dir
         
         # Read equity symbols from file
         self.symbols = self.load_symbols_from_file(symbols_filepath)
@@ -49,8 +52,8 @@ class SchwabWebSocketClient:
         self.market_close_time = datetime.strptime('16:00:30', '%H:%M:%S').time()
         
         # Create data directories if they don't exist
-        os.makedirs('data/equity', exist_ok=True)
-        os.makedirs('data/options', exist_ok=True)
+        os.makedirs(f'{self.data_output_dir}/equity', exist_ok=True)
+        os.makedirs(f'{self.data_output_dir}/options', exist_ok=True)
         
         # CHART_EQUITY field mappings based on Schwab API
         # Fields 2-6 are OHLCV (Open, High, Low, Close, Volume) and field 7 is timestamp
@@ -439,13 +442,13 @@ class SchwabWebSocketClient:
         """
         try:
             # Create equity directory if it doesn't exist
-            os.makedirs('data/equity', exist_ok=True)
+            os.makedirs(f'{self.data_output_dir}/equity', exist_ok=True)
             
             # Clean the symbol for filename (remove spaces and special characters)
             clean_symbol = symbol.replace(' ', '').replace('/', '_').replace('\\', '_')
             
             # Define CSV file path
-            csv_file = f'data/equity/{clean_symbol}.csv'
+            csv_file = f'{self.data_output_dir}/equity/{clean_symbol}.csv'
             
             # Add ET time column (keep original time field as milliseconds)
             if 'time' in data and isinstance(data['time'], int) and data['time'] > 0:
@@ -484,13 +487,13 @@ class SchwabWebSocketClient:
         """
         try:
             # Create options directory if it doesn't exist
-            os.makedirs('data/options', exist_ok=True)
+            os.makedirs(f'{self.data_output_dir}/options', exist_ok=True)
             
             # Clean the symbol for filename (remove spaces and special characters)
             clean_symbol = symbol.replace(' ', '').replace('/', '_').replace('\\', '_')
             
             # Define CSV file path
-            csv_file = f'data/options/{clean_symbol}.csv'
+            csv_file = f'{self.data_output_dir}/options/{clean_symbol}.csv'
             
             # Add ET time column for options (keep all original timestamp fields unchanged)
             # Use field 54 (Indicative Quote Time) as primary timestamp, fall back to quote_time or trade_time
@@ -858,8 +861,38 @@ class SchwabWebSocketClient:
 
 
 if __name__ == "__main__":
-    # Create client
-    client = SchwabWebSocketClient(debug=True)
+    # Parse command-line arguments
+    parser = argparse.ArgumentParser(
+        description='Schwab WebSocket Client for streaming market data',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog='''
+Examples:
+  python schwab_client.py
+  python schwab_client.py --symbols my_symbols.txt --options my_options.txt
+  python schwab_client.py --data-dir /path/to/data --debug
+        '''
+    )
+    parser.add_argument('--symbols', '-s', type=str, default='symbols.txt',
+                        help='Path to equity symbols file (default: symbols.txt)')
+    parser.add_argument('--options', '-o', type=str, default='options_symbols.txt',
+                        help='Path to option symbols file (default: options_symbols.txt)')
+    parser.add_argument('--token', '-t', type=str, default='schwab_access_token.txt',
+                        help='Path to access token file (default: schwab_access_token.txt)')
+    parser.add_argument('--data-dir', '-d', type=str, default='data',
+                        help='Output directory for CSV files (default: data)')
+    parser.add_argument('--debug', action='store_true',
+                        help='Enable debug mode')
+    
+    args = parser.parse_args()
+    
+    # Create client with configurable parameters
+    client = SchwabWebSocketClient(
+        debug=args.debug,
+        symbols_filepath=args.symbols,
+        option_symbols_filepath=args.options,
+        access_token_filepath=args.token,
+        data_output_dir=args.data_dir
+    )
     
     try:
         # Check if it's before market hours and wait until 9:30 AM if needed

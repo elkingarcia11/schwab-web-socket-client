@@ -49,12 +49,48 @@ pip install -r requirements.txt
 
 ## Usage
 
-Run the client:
+### Basic Usage
+
+Run the client with default settings:
 
 ```bash
 source .venv/bin/activate  # If not already activated
 python schwab_client.py
 ```
+
+### Command-Line Options
+
+All file paths and output directory are configurable via command-line arguments:
+
+```bash
+python schwab_client.py [OPTIONS]
+```
+
+**Available Options:**
+
+- `--symbols`, `-s`: Path to equity symbols file (default: `symbols.txt`)
+- `--options`, `-o`: Path to option symbols file (default: `options_symbols.txt`)
+- `--token`, `-t`: Path to access token file (default: `schwab_access_token.txt`)
+- `--data-dir`, `-d`: Output directory for CSV files (default: `data`)
+- `--debug`: Enable debug mode for verbose logging
+
+**Examples:**
+
+```bash
+# Use custom symbol files
+python schwab_client.py --symbols my_stocks.txt --options my_options.txt
+
+# Use custom data output directory
+python schwab_client.py --data-dir /path/to/output
+
+# Enable debug mode with custom paths
+python schwab_client.py --debug --symbols stocks.txt --data-dir market_data
+
+# Use all options together
+python schwab_client.py --symbols equities.txt --options contracts.txt --token my_token.txt --data-dir ./output --debug
+```
+
+### What Happens
 
 The client will:
 
@@ -63,9 +99,9 @@ The client will:
 3. Connect to Schwab WebSocket API
 4. Subscribe to chart data for equity symbols
 5. Subscribe to options data for option symbols
-6. Save all incoming data to CSV files:
-   - Equity data: `data/equity/SYMBOL.csv`
-   - Options data: `data/options/SYMBOL.csv`
+6. Save all incoming data to CSV files (configurable via `--data-dir`):
+   - Equity data: `{data-dir}/equity/SYMBOL.csv`
+   - Options data: `{data-dir}/options/SYMBOL.csv`
 7. Automatically disconnect at market close (4:00:30 PM ET)
 
 ## Data Format
