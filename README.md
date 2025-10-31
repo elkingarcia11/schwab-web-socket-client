@@ -88,6 +88,9 @@ python schwab_client.py --debug --symbols stocks.txt --data-dir market_data
 
 # Use all options together
 python schwab_client.py --symbols equities.txt --options contracts.txt --token my_token.txt --data-dir ./output --debug
+
+# Test with copy files (if you have symbols_copy.txt, options_symbols_copy.txt, etc.)
+python schwab_client.py --symbols symbols_copy.txt --options options_symbols_copy.txt --token schwab_access_token_copy.txt --data-dir test_output
 ```
 
 ### What Happens
@@ -106,10 +109,10 @@ The client will:
 
 ## Data Format
 
-Data is saved to CSV files in the `data/` folder:
+Data is saved to CSV files (default location: `data/` folder, configurable via `--data-dir`):
 
-- Equity data: `data/equity/SYMBOL.csv`
-- Options data: `data/options/SYMBOL.csv`
+- Equity data: `{data-dir}/equity/SYMBOL.csv`
+- Options data: `{data-dir}/options/SYMBOL.csv`
 
 **See the `data/` folder for example output files showing the exact format and column structure.**
 
