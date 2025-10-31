@@ -1,0 +1,4 @@
+httpx
+websocket-client
+pytz
+pandas
