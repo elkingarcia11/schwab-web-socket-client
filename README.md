@@ -70,6 +70,13 @@ The client will:
 
 ## Data Format
 
+Data is saved to CSV files in the `data/` folder:
+
+- Equity data: `data/equity/SYMBOL.csv`
+- Options data: `data/options/SYMBOL.csv`
+
+**See the `data/` folder for example output files showing the exact format and column structure.**
+
 ### Chart Data (CHART_EQUITY)
 
 CSV files contain all fields from the API plus an ET time column:
@@ -82,6 +89,8 @@ CSV files contain all fields from the API plus an ET time column:
 - `chart_day`: Chart day
 - `time_et`: Human-readable ET datetime (added column)
 
+Example file: `data/equity/SPY.csv`
+
 ### Options Data (LEVELONE_OPTIONS)
 
 CSV files contain all 56 fields from the API plus an ET time column:
@@ -89,6 +98,8 @@ CSV files contain all 56 fields from the API plus an ET time column:
 - All standard option fields (bid, ask, last_price, greeks, etc.)
 - `quote_time`, `trade_time`, `indicative_quote_time`: Timestamps in milliseconds
 - `time_et`: Human-readable ET datetime (added column, uses best available timestamp)
+
+Example file: `data/options/AAPL251031C00110000.csv`
 
 ## Dependencies
 
